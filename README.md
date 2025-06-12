@@ -171,8 +171,3 @@ Feel free to fork the repo, report issues, or suggest improvements. This project
 This project is open-source and available under the [MIT License](LICENSE).
 
 ---
-
-```
-
-Let me know if you want to include diagrams, Swagger documentation, or even deploy it to a cloud platform like AWS/GCP as part of a showcase!
-```
