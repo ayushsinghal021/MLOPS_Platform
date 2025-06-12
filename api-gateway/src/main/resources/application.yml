@@ -1,0 +1,112 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  http2:
+    enabled: true
+
+spring:
+  application:
+    name: api-gateway
+  profiles:
+    active: dev
+
+# Service URLs
+services:
+  data:
+    url: ${DATA_SERVICE_URL:http://localhost:8081}
+    timeout: ${DATA_SERVICE_TIMEOUT:30000}
+  training:
+    url: ${TRAINING_SERVICE_URL:http://localhost:8082}
+    timeout: ${TRAINING_SERVICE_TIMEOUT:60000}
+  deployment:
+    url: ${DEPLOYMENT_SERVICE_URL:http://localhost:8083}
+    timeout: ${DEPLOYMENT_SERVICE_TIMEOUT:30000}
+
+# Logging configuration
+logging:
+  level:
+    com.mlops.gateway: DEBUG
+    org.springframework.web: INFO
+    org.springframework.web.client.RestTemplate: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/api-gateway.log
+
+# Management and monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,gateway
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  info:
+    build:
+      enabled: true
+    git:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+# Custom application properties
+app:
+  gateway:
+    rate-limit:
+      enabled: ${RATE_LIMIT_ENABLED:false}
+      requests-per-minute: ${RATE_LIMIT_RPM:100}
+    retry:
+      max-attempts: ${RETRY_MAX_ATTEMPTS:3}
+      delay-ms: ${RETRY_DELAY:1000}
+    circuit-breaker:
+      enabled: ${CIRCUIT_BREAKER_ENABLED:false}
+      failure-threshold: ${CIRCUIT_BREAKER_THRESHOLD:5}
+      timeout-duration: ${CIRCUIT_BREAKER_TIMEOUT:10000}
+  security:
+    cors:
+      enabled: ${CORS_ENABLED:true}
+      allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:8080}
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+      allowed-headers: "*"
+      allow-credentials: true
+      max-age: 3600
+
+---
+# Development profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+logging:
+  level:
+    com.mlops: DEBUG
+
+---
+# Production profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+services:
+  data:
+    url: ${DATA_SERVICE_URL:http://data-service:8081}
+  training:
+    url: ${TRAINING_SERVICE_URL:http://training-service:8082}
+  deployment:
+    url: ${DEPLOYMENT_SERVICE_URL:http://deployment-service:8083}
+logging:
+  level:
+    com.mlops: INFO
+    root: WARN
