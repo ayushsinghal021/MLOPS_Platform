@@ -154,18 +154,6 @@ Every service exposes Spring Actuator endpoints:
 
 ---
 
-## 📅 Development Timeline
-
-| Week     | Focus              | Tasks                                          |
-| -------- | ------------------ | ---------------------------------------------- |
-| Week 1   | Data Service       | File upload, CRUD operations                   |
-| Week 2-3 | Training Service   | Job orchestration, model management            |
-| Week 4-5 | Deployment Service | Model serving simulation, prediction endpoints |
-| Week 6   | API Gateway        | Routing, lightweight load balancing            |
-| Week 6-8 | Testing & Docs     | End-to-end integration, optimization, README   |
-
----
-
 ## ✨ Why This Project?
 
 This MLOps MVP demonstrates the full lifecycle of an ML project in a modular, production-like setting — from data ingestion to model inference. Perfect for showcasing backend design skills, microservices orchestration, and real-world architecture understanding during technical interviews or hackathons.
